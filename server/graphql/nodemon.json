@@ -1,0 +1,10 @@
+{
+  "restartable": "rs",
+  "execMap": {
+    "js": "node"
+  },
+  "ext": "js,mjs,json",
+  "watch": ["./models", "./services", "index.js"],
+  "ignore": [".git", "node_modules/**/node_modules"],
+  "events": {}
+}
