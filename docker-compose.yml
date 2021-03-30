@@ -36,7 +36,7 @@ services:
   graphql_v1:
     container_name: graphql_v1
     build:
-      context: .
+      context: ./server/graphql
     command: yarn dev
     depends_on:
       - mongodb
