@@ -7,18 +7,12 @@ async function init() {
   const app = express();
   let schema = await makeSchema();
 
+  app.use(express.json());
   app.use(express.urlencoded({ extended: false }));
 
-  app.get('/graphql/v1', async function (req, res) {
-    console.log('yeah');
+  app.post('/graph/v1', async function (req, res) {
     let r = await graphql(schema, req.body.query, '_root', '_context', req.body.variables);
     res.json(r);
-  });
-
-  app.get('/', async function (req, res) {
-    console.log('qqq');
-
-    res.json({ a: 'true ' });
   });
 
   app.listen(3002, () => {

@@ -2,3 +2,7 @@
 type Query {
     fiin () : string
 }
+
+schema {
+  query: Query
+}

@@ -13,6 +13,7 @@ function init() {
       });
 
       mongoose.connection.once('open', function () {
+        console.log('connected to db ... \n');
         resolve();
       });
     } catch (e) {

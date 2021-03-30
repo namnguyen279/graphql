@@ -1,15 +1,25 @@
 const { transpileSchema } = require('graphql-s2s').graphqls2s;
 const { makeExecutableSchema, loadSchema, addResolversToSchema } = require('graphql-tools');
 
-const resolvers = require('./resolvers');
+const { resolvers } = require('./resolvers');
 
 async function makeSchema() {
-  return addResolversToSchema({
-    schema: await loadSchema('./schema.graphql'),
-    resolvers,
-  });
+  try {
+    return makeExecutableSchema({
+      typeDefs: `   
+      type Query {
+        fiin: String
+      }
+
+      schema {
+        query: Query
+      }
+      `,
+      resolvers,
+    });
+  } catch (e) {
+    console.error(e);
+  }
 }
 
-exports.module = {
-  makeSchema,
-};
+exports.makeSchema = makeSchema;

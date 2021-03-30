@@ -1,10 +1,8 @@
 async function fiin(root, props, context) {
-  return {
-    result: 'ABC',
-  };
+  return 'string';
 }
 
-exports.resolver = {
+exports.resolvers = {
   Query: {
     fiin,
   },
