@@ -1,0 +1,4 @@
+- Folders structure
+  - storage: contain all container storage maps
+  - public: assets folder that public by /static from nginx
+  - config: contain all config, init that map to container

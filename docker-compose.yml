@@ -1,22 +1,18 @@
 version: '3'
 
 services:
-  mongodb:
-    image: mongo:4.0-xenial
-    container_name: mongodb
-    hostname: mongodb
-    volumes:
-      - ./mongo/data:/data/db
+  mssql:
+    image: mcr.microsoft.com/mssql/server:latest
+    container_name: mssql
     restart: always
-    command: --bind_ip_all --replSet rs0 --oplogSize 128
-  mongodb_replica_1:
-    image: mongo:4.0-xenial
-    container_name: mongodb_replica_1
-    hostname: mongodb_replica_1
+    ports:
+      - 1433
     volumes:
-      - ./mongo/data_1:/data/db
-    restart: always
-    command: --bind_ip_all --replSet rs0 --oplogSize 128
+      - ./storage/mssqldata:/var/opt/mssq
+      - ./config/mssql/init.sql:/init.sql
+    environment:
+      - ACCEPT_EULA=Y
+      - SA_PASSWORD=Dev@2021
   nginx:
     image: nginx
     container_name: nginx
@@ -38,12 +34,15 @@ services:
     build:
       context: ./server/graphql
     command: yarn dev
+    environment:
+      - SQL_PROJECT_TABLE=myapp
+      - SQL_ROOT_USER=SA
+      - SQL_ROOT_PASSWORD=Dev@2021
     depends_on:
-      - mongodb
+      - mssql
       - redis
     links:
-      - mongodb
-      - mongodb_replica_1
+      - mssql
       - redis
     volumes:
       - /app/node_modules

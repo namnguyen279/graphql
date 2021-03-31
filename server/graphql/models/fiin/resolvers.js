@@ -1,5 +1,8 @@
 async function fiin(root, props, context) {
-  return 'string';
+  return {
+    name: 'something',
+    age: 'something',
+  };
 }
 
 exports.resolvers = {
