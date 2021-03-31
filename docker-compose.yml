@@ -1,22 +1,30 @@
 version: '3'
 
 services:
-  mongodb:
-    image: mongo:4.0-xenial
-    container_name: mongodb
-    hostname: mongodb
+  postgresql-master:
+    image: 'docker.io/bitnami/postgresql:11-debian-10'
     volumes:
-      - ./mongo/data:/data/db
-    restart: always
-    command: --bind_ip_all --replSet rs0 --oplogSize 128
-  mongodb_replica_1:
-    image: mongo:4.0-xenial
-    container_name: mongodb_replica_1
-    hostname: mongodb_replica_1
-    volumes:
-      - ./mongo/data_1:/data/db
-    restart: always
-    command: --bind_ip_all --replSet rs0 --oplogSize 128
+      - 'postgresql_master_data:/bitnami/postgresql'
+    environment:
+      - POSTGRESQL_REPLICATION_MODE=master
+      - POSTGRESQL_REPLICATION_USER=repl_user
+      - POSTGRESQL_REPLICATION_PASSWORD=repl_password
+      - POSTGRESQL_DATABASE=my_database
+      - POSTGRESQL_USERNAME=postgres
+      - POSTGRESQL_PASSWORD=my_password
+      - ALLOW_EMPTY_PASSWORD=yes
+  postgresql-slave:
+    image: 'docker.io/bitnami/postgresql:11-debian-10'
+    depends_on:
+      - postgresql-master
+    environment:
+      - POSTGRESQL_REPLICATION_MODE=slave
+      - POSTGRESQL_REPLICATION_USER=repl_user
+      - POSTGRESQL_REPLICATION_PASSWORD=repl_password
+      - POSTGRESQL_MASTER_HOST=postgresql-master
+      - POSTGRESQL_PASSWORD=my_password
+      - POSTGRESQL_MASTER_PORT_NUMBER=5432
+      - ALLOW_EMPTY_PASSWORD=yes
   nginx:
     image: nginx
     container_name: nginx
@@ -35,18 +43,24 @@ services:
     restart: always
   graphql_v1:
     container_name: graphql_v1
+    environment:
+      - POSTGRESQL_REPLICATION_USER=repl_user
+      - POSTGRESQL_REPLICATION_PASSWORD=repl_password
+      - POSTGRESQL_DATABASE=my_database
     build:
       context: ./server/graphql
     command: yarn dev
     depends_on:
-      - mongodb
+      - postgresql-master
       - redis
     links:
-      - mongodb
-      - mongodb_replica_1
+      - postgresql-master
       - redis
     volumes:
       - /app/node_modules
       - ./server/graphql:/usr/app
     ports:
       - 3002
+volumes:
+  postgresql_master_data:
+    driver: local

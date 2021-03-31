@@ -1,5 +1,5 @@
 let { init: express } = require('./services/express');
-let { init: db } = require('./services/mongodb');
+let { init: db } = require('./services/postgres');
 
 async function main() {
   try {
