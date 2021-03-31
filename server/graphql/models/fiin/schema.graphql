@@ -1,10 +1,11 @@
-type User {
-  name: String
-  age: Int
+type Company {
+  ISA36: Int
+  ISA37: Int
 }
 
 type Query {
-    fiin () : User
+    company () : Company
+    companies([String]): [Company]
 }
 
 schema {

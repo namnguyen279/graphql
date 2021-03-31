@@ -1,10 +1,9 @@
 const mongoose = require('mongoose');
 const { Sequelize } = require('sequelize');
 const tedious = require('tedious');
-console.log(process.env);
 
 async function init() {
-  const sequelize = new Sequelize('', process.env.SQL_ROOT_USER, process.env.SQL_ROOT_PASSWORD, {
+  const sequelize = (global.db = new Sequelize('', process.env.SQL_ROOT_USER, process.env.SQL_ROOT_PASSWORD, {
     host: 'mssql',
     dialect: 'mssql',
     dialectModule: tedious,
@@ -14,9 +13,14 @@ async function init() {
       acquire: 30000,
       idle: 10000,
     },
-  });
+  }));
 
   await sequelize.query(`CREATE DATABASE ${process.env.SQL_PROJECT_TABLE}`);
+
+  // await sequelize.query(`
+  //   CREATE OR REPLACE VIEW viewname AS
+
+  // `);
 
   try {
     await sequelize.authenticate();
