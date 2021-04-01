@@ -1,12 +1,12 @@
-async function fiin(root, props, context) {
+async function company(root, props, context) {
   return {
-    name: 'something',
+    ISA36: 'something',
     age: 'something',
   };
 }
 
 exports.resolvers = {
   Query: {
-    fiin,
+    company,
   },
 };

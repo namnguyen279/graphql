@@ -19,5 +19,6 @@ async function init() {
     console.log(`Fiin - http://localhost:${3002}`);
   });
 }
-
-exports.init = init;
+module.exports = {
+  init,
+};

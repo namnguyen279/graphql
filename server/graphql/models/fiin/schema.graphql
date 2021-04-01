@@ -1,11 +1,11 @@
 type Company {
-  ISA36: Int
-  ISA37: Int
+  ISA36: String
+  ISA37: String
 }
 
 type Query {
-    company () : Company
-    companies([String]): [Company]
+  company: Company
+  # companies([String]): [Company]
 }
 
 schema {
